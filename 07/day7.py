@@ -20,7 +20,9 @@ class Calibrations:
         if len(numbers) < 1:
             return last
         for j in self.operators:
-            if self.target_found:
+            # If we found our target already, abort
+            # If the last value is greater than the target, abort
+            if self.target_found or last > self.target:
                 return
             total = self.all_options(
                 numbers[1:], self.do_math((last, numbers[0]), j)
