@@ -41,17 +41,23 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Bridge Repair")
     parser.add_argument("filename", help="Path to the input file")
     args = parser.parse_args()
-    sum_of_valid = {2: 0, 3: 0}
+    sum_of_valid = [0, 0]
     with open(f"{path}/{args.filename}", "r") as f:
         for line in f:
             line = line.strip()
             target = int(line.split(":")[0])
-            ops = ("+", "*", "||")
-            for i in range(2, 4):
-                c = Calibrations(target, ops[:i])
-                sum_of_valid[i] += c.process_line(line)
-    for i in range(2, 4):
-        print(f"The sum of valid calibrations is {sum_of_valid[i]}")
+            for idx, ops in enumerate([["+", "*"], ["+", "*", "||"]]):
+                c = Calibrations(target, ops)
+                found = c.process_line(line)
+                sum_of_valid[idx] += found
+                if found:
+                    break
+    for i in range(0, 2):
+        part = i + 1
+        print(
+            "The sum of valid calibrations for Part "
+            + f"{part} is {sum(sum_of_valid[:part])}"
+        )
 
 
 if __name__ == "__main__":
